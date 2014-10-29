@@ -117,8 +117,8 @@ function getChoices(map, order, emptyChoice) {
 function getOptionalLabel(name, optional) {
   name = humanize(name);
   return optional ?
-    React.DOM.span(null, name, React.DOM.small({className: "text-muted"}, optional)) :
-    React.DOM.span(null, name);
+    React.createElement("span", null, name, React.createElement("small", {className: "text-muted"}, optional)) :
+    React.createElement("span", null, name);
 }
 
 function getLabel(label, breakpoints) {
@@ -127,15 +127,15 @@ function getLabel(label, breakpoints) {
     classes['control-label'] = true;
     classes[breakpoints.toLabelClassName()] = true;
   }
-  return label ? React.DOM.label({className: cx(classes)}, label) : null;
+  return label ? React.createElement("label", {className: cx(classes)}, label) : null;
 }
 
 function getHelp(help) {
-  return help ? React.DOM.span({className: "help-block"}, help) : null;
+  return help ? React.createElement("span", {className: "help-block"}, help) : null;
 }
 
 function getAddon(addon) {
-  return addon ? React.DOM.span({className: "input-group-addon"}, addon) : null;
+  return addon ? React.createElement("span", {className: "input-group-addon"}, addon) : null;
 }
 
 var Positive = subtype(Num, function (n) {
@@ -183,7 +183,7 @@ Breakpoints.prototype.toCheckboxClassName = function () {
 };
 
 function getOption(option, key) {
-  return React.DOM.option({key: key, value: option.value}, option.text);
+  return React.createElement("option", {key: key, value: option.value}, option.text);
 }
 
 // returns the list of options of a select
@@ -199,7 +199,7 @@ function getOptions(options, order, emptyOption) {
   options.forEach(function (x, i) {
     if (x.group) {
       ret.push(
-        React.DOM.optgroup({label: x.group, key: i}, 
+        React.createElement("optgroup", {label: x.group, key: i}, 
           x.options.map(function (o, j) {
             return getOption(o, String(i) + '-' + String(j));
           })
@@ -352,7 +352,7 @@ function textbox(type, opts) {
       }, opts.groupClasses);
 
       var input = opts.type === 'textarea' ? 
-        React.DOM.textarea({
+        React.createElement("textarea", {
           ref: "input", 
           name: opts.name, 
           className: cx(inputClasses), 
@@ -362,7 +362,7 @@ function textbox(type, opts) {
           placeholder: opts.placeholder, 
           onKeyDown: opts.onKeyDown, 
           onChange: opts.onChange}) :
-        React.DOM.input({
+        React.createElement("input", {
           ref: "input", 
           name: opts.name, 
           className: cx(inputClasses), 
@@ -376,7 +376,7 @@ function textbox(type, opts) {
 
       if (addonBefore || addonAfter) {
         input = (
-          React.DOM.div({className: "input-group"}, 
+          React.createElement("div", {className: "input-group"}, 
             addonBefore, 
             input, 
             addonAfter
@@ -386,14 +386,14 @@ function textbox(type, opts) {
 
       if (opts.breakpoints) {
         input = (
-          React.DOM.div({className: opts.breakpoints.toInputClassName()}, 
+          React.createElement("div", {className: opts.breakpoints.toInputClassName()}, 
             input
           )
         );
       }
 
       return (
-        React.DOM.div({className: cx(groupClasses)}, 
+        React.createElement("div", {className: cx(groupClasses)}, 
           label, 
           input, 
           help
@@ -430,7 +430,8 @@ function selectOpts(type) {
     order:        maybe(Order),
     disabled:     maybe(Bool),
     breakpoints:  maybe(Breakpoints),
-    height:       maybe(Size)
+    height:       maybe(Size),
+    multiple:     maybe(Bool)
   }, 'SelectOpts');
 }
 
@@ -474,11 +475,12 @@ function select(type, opts) {
       }, opts.groupClasses);
 
       var input = (
-        React.DOM.select({
+        React.createElement("select", {
           ref: "input", 
           className: cx(inputClasses), 
           disabled: opts.disabled, 
           readOnly: opts.readOnly, 
+          multiple: opts.multiple, 
           defaultValue: defaultValue}, 
           options
         )
@@ -486,14 +488,14 @@ function select(type, opts) {
 
       if (opts.breakpoints) {
         input = (
-          React.DOM.div({className: opts.breakpoints.toInputClassName()}, 
+          React.createElement("div", {className: opts.breakpoints.toInputClassName()}, 
             input
           )
         );
       }
 
       return (
-        React.DOM.div({className: cx(groupClasses)}, 
+        React.createElement("div", {className: cx(groupClasses)}, 
           label, 
           input, 
           help
@@ -563,9 +565,9 @@ function radio(type, opts) {
 
       var input = choices.map(function (c, i) {
         return (
-          React.DOM.div({className: "radio", key: i}, 
-            React.DOM.label(null, 
-              React.DOM.input({type: "radio", ref: name + i, name: name, value: c.value, defaultChecked: c.value === defaultValue}), 
+          React.createElement("div", {className: "radio", key: i}, 
+            React.createElement("label", null, 
+              React.createElement("input", {type: "radio", ref: name + i, name: name, value: c.value, defaultChecked: c.value === defaultValue}), 
               c.text
             )
           )
@@ -574,14 +576,14 @@ function radio(type, opts) {
 
       if (opts.breakpoints) {
         input = (
-          React.DOM.div({className: opts.breakpoints.toInputClassName()}, 
+          React.createElement("div", {className: opts.breakpoints.toInputClassName()}, 
             input
           )
         );
       }
 
       return (
-        React.DOM.div({className: cx(groupClasses)}, 
+        React.createElement("div", {className: cx(groupClasses)}, 
           label, 
           input, 
           help
@@ -644,23 +646,23 @@ function checkbox(type, opts) {
       }, opts.groupClasses);
 
       var input = (
-        React.DOM.div({className: "checkbox"}, 
-          React.DOM.label(null, 
-            React.DOM.input({ref: "input", type: "checkbox", defaultChecked: defaultValue}), " ", opts.label
+        React.createElement("div", {className: "checkbox"}, 
+          React.createElement("label", null, 
+            React.createElement("input", {ref: "input", type: "checkbox", defaultChecked: defaultValue}), " ", opts.label
           )
         )
       );
 
       if (opts.breakpoints) {
         input = (
-          React.DOM.div({className: opts.breakpoints.toCheckboxClassName()}, 
+          React.createElement("div", {className: opts.breakpoints.toCheckboxClassName()}, 
             input
           )
         );
       }
 
       return (
-        React.DOM.div({className: cx(groupClasses)}, 
+        React.createElement("div", {className: cx(groupClasses)}, 
           input, 
           help
         )
@@ -802,7 +804,7 @@ function createForm(type, opts) {
       });
 
       return (
-        React.DOM.div({className: cx(classes)}, 
+        React.createElement("div", {className: cx(classes)}, 
           label, 
           children
         )
@@ -938,15 +940,15 @@ function createList(type, opts) {
         }, opts.item, true);
         
         children.push(
-          React.DOM.div({className: "row", key: i}, 
-            React.DOM.div({className: "col-md-7"}, 
+          React.createElement("div", {className: "row", key: i}, 
+            React.createElement("div", {className: "col-md-7"}, 
               Input(ItemType, o)({ref: i})
             ), 
-            React.DOM.div({className: "col-md-5"}, 
-              React.DOM.div({className: "btn-group"}, 
-                opts.disableRemove ? null : React.DOM.button({className: "btn btn-default btn-remove", onClick: this.remove.bind(this, i)}, "Remove"), 
-                !opts.disableOrder ? React.DOM.button({className: "btn btn-default btn-move-up", onClick: this.moveUp.bind(this, i)}, "Up") : null, 
-                !opts.disableOrder ? React.DOM.button({className: "btn btn-default btn-move-down", onClick: this.moveDown.bind(this, i)}, "Down") : null
+            React.createElement("div", {className: "col-md-5"}, 
+              React.createElement("div", {className: "btn-group"}, 
+                opts.disableRemove ? null : React.createElement("button", {className: "btn btn-default btn-remove", onClick: this.remove.bind(this, i)}, "Remove"), 
+                !opts.disableOrder ? React.createElement("button", {className: "btn btn-default btn-move-up", onClick: this.moveUp.bind(this, i)}, "Up") : null, 
+                !opts.disableOrder ? React.createElement("button", {className: "btn btn-default btn-move-down", onClick: this.moveDown.bind(this, i)}, "Down") : null
               )
             )
           )
@@ -954,13 +956,13 @@ function createList(type, opts) {
       }
 
       var btnAdd = opts.disableAdd ? null : (
-        React.DOM.div({className: "form-group"}, 
-          React.DOM.button({className: "btn btn-default btn-add", onClick: this.add}, "Add")
+        React.createElement("div", {className: "form-group"}, 
+          React.createElement("button", {className: "btn btn-default btn-add", onClick: this.add}, "Add")
         )
       );
 
       return (
-        React.DOM.div({className: cx(classes)}, 
+        React.createElement("div", {className: cx(classes)}, 
           label, 
           children, 
           btnAdd

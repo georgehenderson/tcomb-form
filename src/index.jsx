@@ -430,7 +430,8 @@ function selectOpts(type) {
     order:        maybe(Order),
     disabled:     maybe(Bool),
     breakpoints:  maybe(Breakpoints),
-    height:       maybe(Size)
+    height:       maybe(Size),
+    multiple:     maybe(Bool)
   }, 'SelectOpts');
 }
 
@@ -479,6 +480,7 @@ function select(type, opts) {
           className={cx(inputClasses)} 
           disabled={opts.disabled}
           readOnly={opts.readOnly}
+          multiple={opts.multiple}
           defaultValue={defaultValue}>
           {options}
         </select>

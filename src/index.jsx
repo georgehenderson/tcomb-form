@@ -481,7 +481,7 @@ function select(type, opts) {
           disabled={opts.disabled}
           readOnly={opts.readOnly}
           multiple={opts.multiple}
-          defaultValue={defaultValue}>
+          defaultValue={opts.multiple ? [defaultValue] : defaultValue}>
           {options}
         </select>
       );

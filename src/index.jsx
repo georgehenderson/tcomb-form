@@ -461,8 +461,8 @@ function select(type, opts) {
     getInitialState: getInitialState,
     
     getRawValue: function () {
-      var value = this.refs.input.getDOMNode().value;
-      return value === emptyValue ? null : value;
+      var values = this.refs.input.getDOMNode().selectedOptions.map(function(e) { return e.value; });
+      return values.length === 1 ? (values[0] === emptyValue ? null : values[0]) : values;
     },
     
     getValue: getValue(type),
